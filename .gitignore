@@ -1,0 +1,4 @@
+/bin
+/build
+/zig-cache
+src/zig-cache
