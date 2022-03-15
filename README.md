@@ -1,4 +1,4 @@
-# stm32l522zig
+# stm32l552zig
 Zig program for the STM32L552ZE Nucleo Board, to explore driver development using Zig
 
 Documentation can be found here for the STM32L552ZE Reference Manual https://www.st.com/resource/en/reference_manual/rm0438-stm32l552xx-and-stm32l562xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf 
