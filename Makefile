@@ -82,6 +82,9 @@ clean:
 flash:
 	STM32_Programmer_CLI -c port=SWD -w $(BIN_DIR)/main.bin 0x08000000
 
+flashzig:
+	STM32_Programmer_CLI -c port=SWD -w $(BLD_DIR)/main.bin 0x08000000
+
 info:
 	STM32_Programmer_CLI -c port=SWD
 
