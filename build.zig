@@ -13,7 +13,7 @@ pub fn build(b: *std.build.Builder) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     // const mode = b.standardReleaseOptions(.ReleaseSmall);
     
-    const start = b.addAssemble("startup", "./src/startup/startup_ARMCM33.s");
+    const start = b.addAssemble("startup", "./src/startup/stm_ARMCM33.s");
     start.setTarget(target);
     start.setBuildMode(.ReleaseSmall);
     start.strip = true;
@@ -33,7 +33,7 @@ pub fn build(b: *std.build.Builder) void {
         "-Os",
         "-s",
         "-T",
-        "./src/linker/gcc_arm.ld",
+        "./src/linker/stm_arm.ld",
         "build/startup.o",
         "build/main.o",
         "-o",
