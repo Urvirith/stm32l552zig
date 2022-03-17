@@ -12,42 +12,22 @@ pub fn build(b: *std.build.Builder) void {
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     // const mode = b.standardReleaseOptions(.ReleaseSmall);
-    
-    const start = b.addAssemble("startup", "./src/startup/stm_ARMCM33.s");
-    start.setTarget(target);
-    start.setBuildMode(.ReleaseSmall);
-    start.strip = true;
-    start.setOutputDir("./build");
+    const elf = b.addExecutable("main.elf", "src/main.zig");
+    elf.setTarget(target);
+    elf.setBuildMode(.ReleaseSmall);
+    elf.strip = true;
+    elf.setOutputDir("./build");
 
-    const main = b.addObject("main", "./src/main.zig");
-    main.setTarget(target);
-    main.setBuildMode(.ReleaseSmall);
-    main.strip = true;
-    main.setOutputDir("./build");
+    const startup = b.addAssemble("startup", "src/startup/stm_ARMCM33.s");
+    startup.setTarget(target);
+    startup.setBuildMode(.ReleaseSmall);
+    startup.strip = true;
+    startup.setOutputDir("./build");
 
-    b.default_step.dependOn(&start.step);
-    b.default_step.dependOn(&main.step);
+    elf.addObject(startup);
+    elf.setLinkerScriptPath(.{ .path = "src/linker/stm_arm.ld" });
+    elf.link_function_sections = true;
 
-    const link_cmd = b.addSystemCommand(&[_][]const u8{
-        "arm-none-eabi-ld",
-        "-Os",
-        "-s",
-        "-T",
-        "./src/linker/stm_arm.ld",
-        "build/startup.o",
-        "build/main.o",
-        "-o",
-        "build/main.elf",
-    });
-
-    const obj_cmd = b.addSystemCommand(&[_][]const u8{
-        "arm-none-eabi-objcopy",
-        "-O",
-        "binary",
-        "build/main.elf",
-        "build/main.bin",
-    });
-
-    b.default_step.dependOn(&link_cmd.step);
-    b.default_step.dependOn(&obj_cmd.step);
+    b.default_step.dependOn(&elf.step);
+    b.installArtifact(elf);
 }

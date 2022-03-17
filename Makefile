@@ -27,10 +27,10 @@ BIN_DIR	  := ./bin
 BLD_DIR	  := ./build
 
 #ONLY ONE
-STARTUP		:= startup_ARMCM33.s
+STARTUP		:= stm_ARMCM33.s
 
 #ONLY ONE
-LINKER		:= gcc_arm.ld
+LINKER		:= stm_arm.ld
 
 #	EXAMPLE OF AUTOMATIC VARIABLES
 #	%.o: %.c %.h common.h
@@ -73,17 +73,20 @@ clean:
 	rm -f $(BIN_DIR)/*.o
 	rm -f $(BIN_DIR)/*.elf
 	rm -f $(BIN_DIR)/*.bin
+	rm -r $(SRC_DIR)/zig-cache
+
+cleanzig:	
 	rm -f $(BLD_DIR)/*.o
 	rm -f $(BLD_DIR)/*.elf
 	rm -f $(BLD_DIR)/*.bin
 	rm -r ./zig-cache
-	rm -r $(SRC_DIR)/zig-cache
+	rm -r ./zig-out
 
 flash:
 	STM32_Programmer_CLI -c port=SWD -w $(BIN_DIR)/main.bin 0x08000000
 
 flashzig:
-	STM32_Programmer_CLI -c port=SWD -w $(BLD_DIR)/main.bin 0x08000000
+	STM32_Programmer_CLI -c port=SWD -w $(BLD_DIR)/main.elf 0x08000000
 
 info:
 	STM32_Programmer_CLI -c port=SWD
